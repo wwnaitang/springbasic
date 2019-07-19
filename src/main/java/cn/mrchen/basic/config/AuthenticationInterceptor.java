@@ -26,7 +26,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        String token = request.getHeader("token");// 从 http 请求头中取出 token
+        String token = null;// 从 cookie 中取出 token
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if ("token".equals(cookie.getName())) {
