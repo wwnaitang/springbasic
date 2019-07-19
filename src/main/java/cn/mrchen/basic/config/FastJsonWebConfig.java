@@ -23,7 +23,7 @@ public class FastJsonWebConfig {
                 SerializerFeature.WriteMapNullValue,
                 SerializerFeature.WriteDateUseDateFormat);
         // 设置全局日期格式
-        fastJsonConfig.setDateFormat("yyyy-mm-dd");
+//        fastJsonConfig.setDateFormat("yyyy-mm-dd");
         //3. 在converter中添加配置信息
         fasHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
         HttpMessageConverter<?> converter = fasHttpMessageConverter;
