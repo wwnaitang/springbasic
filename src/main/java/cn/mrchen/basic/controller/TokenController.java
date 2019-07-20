@@ -3,8 +3,7 @@ package cn.mrchen.basic.controller;
 import cn.mrchen.basic.entity.UserVO;
 import cn.mrchen.basic.note.PassToken;
 import cn.mrchen.basic.note.UseToken;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import cn.mrchen.basic.util.JJWTTokenCreator;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,24 +11,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/token")
+@UseToken
+//@PassToken
 public class TokenController {
 
     @PostMapping("/get")
     @PassToken
-    public String getToken(@RequestBody UserVO userVO) {
-        String token="";
-        token= JWT.create().withAudience(userVO.getUsername())
-                .sign(Algorithm.HMAC256(userVO.getPassword()));
+    public String getToken(@RequestBody UserVO userVO, HttpServletResponse response) {
+        JJWTTokenCreator tokenCreator = new JJWTTokenCreator();
+        tokenCreator.setClaim("username", userVO.getUsername());
+        String token = tokenCreator.createToken();
+        Cookie cookie = new Cookie("token", token);
+        response.addCookie(cookie);
         return token;
     }
 
     @PostMapping("/check")
-    @UseToken
+//    @UseToken
+    @PassToken(required = false)
     public String checkToken() {
         return "success";
     }
@@ -40,14 +42,19 @@ public class TokenController {
         UserVO userVO = new UserVO();
         userVO.setUsername("a1");
         userVO.setPassword("123qwe");
-        String token = JWT.create().withAudience(userVO.getUsername()).sign(Algorithm.HMAC256(userVO.getPassword()));
+        JJWTTokenCreator tokenCreator = new JJWTTokenCreator();
+        tokenCreator.setClaim("username", userVO.getUsername());
+        String token = tokenCreator.createToken();
         Cookie cookie = new Cookie("token", token);
         response.addCookie(cookie);
-        return "success";
+        // 测试将token放在header
+        response.addHeader("token", token);  // 测试失败
+        return token;
     }
 
     @RequestMapping("/check2")
-    @UseToken
+//    @UseToken
+    @PassToken
     public String checkToken2() {
         return "success";
     }

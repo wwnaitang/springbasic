@@ -4,11 +4,8 @@ import cn.mrchen.basic.entity.UserVO;
 import cn.mrchen.basic.note.PassToken;
 import cn.mrchen.basic.note.UseToken;
 import cn.mrchen.basic.service.IUserService;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import cn.mrchen.basic.util.JJWTTokenCreator;
+import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -28,9 +25,11 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = null;// 从 cookie 中取出 token
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if ("token".equals(cookie.getName())) {
-                token = cookie.getValue();
+        if (cookies != null && cookies.length > 0) {
+            for (Cookie cookie : cookies) {
+                if ("token".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                }
             }
         }
         // 如果不是映射到方法直接通过
@@ -39,42 +38,51 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         Method method = handlerMethod.getMethod();
-        //检查是否有passtoken注释，有则跳过认证
-        if (method.isAnnotationPresent(PassToken.class)) {
+        Class clazz = method.getDeclaringClass();
+        // 检查是否有passtoken注释，有则跳过认证
+        // 需要验证
+        // 1. UseToken(class)
+        // 2. UseToken(class + method)
+        // 3. UseToken(method)
+        // 不需要验证
+        // 1. UseToken(class) + PassToken(method
+        if (!method.isAnnotationPresent(UseToken.class) && !clazz.isAnnotationPresent(UseToken.class)
+                || method.isAnnotationPresent(PassToken.class)) {
+            if (!method.isAnnotationPresent(PassToken.class) && !clazz.isAnnotationPresent(PassToken.class)) {
+                return true;
+            }
             PassToken passToken = method.getAnnotation(PassToken.class);
+            if (passToken == null) {
+                passToken = (PassToken) clazz.getAnnotation(PassToken.class);
+            }
             if (passToken.required()) {
+                return true;
+            }
+            if (!clazz.isAnnotationPresent(UseToken.class)) {
                 return true;
             }
         }
         //检查有没有需要用户权限的注解
-        if (method.isAnnotationPresent(UseToken.class)) {
-            UseToken userLoginToken = method.getAnnotation(UseToken.class);
-            if (userLoginToken.required()) {
-                // 执行认证
-                if (token == null) {
-                    throw new RuntimeException("无token，请重新登录");
-                }
-                // 获取 token 中的 user id
-                String username;
-                try {
-                    username = JWT.decode(token).getAudience().get(0);
-                } catch (JWTDecodeException j) {
-                    throw new RuntimeException("401");
-                }
-                UserVO user = userService.queryByUsername(username);
-                if (user == null) {
-                    throw new RuntimeException("用户不存在，请重新登录");
-                }
-                // 验证 token
-                JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
-                try {
-                    jwtVerifier.verify(token);
-                } catch (JWTVerificationException e) {
-                    throw new RuntimeException("401");
-                }
-                return true;
-            }
+        UseToken useToken = method.getAnnotation(UseToken.class);
+        if (useToken == null) {
+            useToken = (UseToken) clazz.getAnnotation(UseToken.class);
         }
+        if (useToken.required()) {
+            // 执行认证
+            if (token == null) {
+                throw new RuntimeException("无token，请重新登录");
+            }
+            // 获取 token 中的 user id
+            String username;
+            Claims claims = JJWTTokenCreator.parseToken(token);
+            username = (String) claims.get("username");
+            UserVO user = userService.queryByUsername(username);
+            if (user == null) {
+                throw new RuntimeException("用户不存在，请重新登录");
+            }
+            return true;
+        }
+
         return true;
     }
 
