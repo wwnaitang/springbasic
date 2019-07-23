@@ -26,12 +26,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = null;// 从 cookie 中取出 token
         Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length > 0) {
-            for (Cookie cookie : cookies) {
-                if ("token".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                    break;
-                }
+        for (int i = 0; cookies != null && cookies.length > i; i++) {
+            if ("token".equals(cookies[i].getName())) {
+                token = cookies[i].getValue();
+                break;
             }
         }
         // 如果不是映射到方法直接通过
@@ -90,13 +88,4 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
-    }
 }
