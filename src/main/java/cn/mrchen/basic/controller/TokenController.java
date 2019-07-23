@@ -31,7 +31,7 @@ public class TokenController {
 
     @PostMapping("/check")
 //    @UseToken
-    @PassToken(required = false)
+    @PassToken
     public String checkToken() {
         return "success";
     }
