@@ -1,5 +1,6 @@
 package cn.mrchen.basic.config;
 
+import cn.mrchen.basic.exception.LoginException;
 import cn.mrchen.basic.entity.UserVO;
 import cn.mrchen.basic.note.PassToken;
 import cn.mrchen.basic.note.UseToken;
@@ -29,6 +30,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             for (Cookie cookie : cookies) {
                 if ("token".equals(cookie.getName())) {
                     token = cookie.getValue();
+                    break;
                 }
             }
         }
@@ -70,7 +72,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         if (useToken.required()) {
             // 执行认证
             if (token == null) {
-                throw new RuntimeException("无token，请重新登录");
+//                throw new RuntimeException("无token，请重新登录");
+                throw new LoginException("please login again");
             }
             // 获取 token 中的 user id
             String username;
@@ -78,7 +81,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             username = (String) claims.get("username");
             UserVO user = userService.queryByUsername(username);
             if (user == null) {
-                throw new RuntimeException("用户不存在，请重新登录");
+//                throw new RuntimeException("用户不存在，请重新登录");
+                throw new LoginException("could not found this user");
             }
             return true;
         }
