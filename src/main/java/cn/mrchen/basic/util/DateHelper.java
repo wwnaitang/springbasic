@@ -25,7 +25,6 @@ public class DateHelper {
             return (Date) date.clone();
         } else if (days < 0) {
             isAdd = false;
-            days = days * (-1);
         }
 
         Instant instant = date.toInstant();
@@ -34,7 +33,7 @@ public class DateHelper {
         if (isAdd) {
             localDateTime = localDateTime.plusDays(days);
         } else {
-            localDateTime = localDateTime.minusDays(days);
+            localDateTime = localDateTime.minusDays(days * (-1));
         }
         ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
         Date newDate = Date.from(zonedDateTime.toInstant());
@@ -42,7 +41,7 @@ public class DateHelper {
     }
 
     /**
-     *
+     * 日期计算
      * @param date
      * @param chronoUnit
      * @param size
@@ -51,12 +50,11 @@ public class DateHelper {
     public static Date dateCalculation(Date date, ChronoUnit chronoUnit, long size) {
         boolean isAdd = true;
         if (date == null || chronoUnit == null) {
-            throw new RuntimeException("Date or unit of account is empty, cannot be calculated");
+            return null;
         } else if (size == 0) {
             return (Date) date.clone();
         } else if (size < 0) {
             isAdd = false;
-            size = size * (-1);
         }
 
         Instant instant = date.toInstant();
@@ -65,7 +63,7 @@ public class DateHelper {
         if (isAdd) {
             localDateTime = localDateTime.plus(size, chronoUnit);
         } else {
-            localDateTime = localDateTime.minus(size, chronoUnit);
+            localDateTime = localDateTime.minus(size * (-1), chronoUnit);
         }
         ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
         Date newDate = Date.from(zonedDateTime.toInstant());
