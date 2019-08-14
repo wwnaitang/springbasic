@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.mrchen.basic.mapper.AdminMapper">
+  <resultMap id="BaseResultMap" type="cn.mrchen.basic.entity.Admin">
+    <constructor>
+      <idArg column="PK_ADMIN" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="REVISION" javaType="java.lang.Integer" jdbcType="INTEGER" />
+      <arg column="CREATED_BY" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="CREATED_TIME" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="UPDATED_BY" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="UPDATED_TIME" javaType="java.util.Date" jdbcType="TIMESTAMP" />
+      <arg column="CODE" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="DISPLAY_NAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="USERNAME" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="PASSWORD" javaType="java.lang.String" jdbcType="VARCHAR" />
+      <arg column="LOCK_FLAG" javaType="java.lang.String" jdbcType="CHAR" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List">
+    PK_ADMIN, REVISION, CREATED_BY, CREATED_TIME, UPDATED_BY, UPDATED_TIME, CODE, DISPLAY_NAME, 
+    USERNAME, PASSWORD, LOCK_FLAG
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from admin
+    where PK_ADMIN = #{pkAdmin,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from admin
+    where PK_ADMIN = #{pkAdmin,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="cn.mrchen.basic.entity.Admin">
+    insert into admin (PK_ADMIN, REVISION, CREATED_BY, 
+      CREATED_TIME, UPDATED_BY, UPDATED_TIME, 
+      CODE, DISPLAY_NAME, USERNAME, 
+      PASSWORD, LOCK_FLAG)
+    values (#{pkAdmin,jdbcType=VARCHAR}, #{revision,jdbcType=INTEGER}, #{createdBy,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR}, #{updatedTime,jdbcType=TIMESTAMP}, 
+      #{code,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
+      #{password,jdbcType=VARCHAR}, #{lockFlag,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.mrchen.basic.entity.Admin">
+    insert into admin
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pkAdmin != null">
+        PK_ADMIN,
+      </if>
+      <if test="revision != null">
+        REVISION,
+      </if>
+      <if test="createdBy != null">
+        CREATED_BY,
+      </if>
+      <if test="createdTime != null">
+        CREATED_TIME,
+      </if>
+      <if test="updatedBy != null">
+        UPDATED_BY,
+      </if>
+      <if test="updatedTime != null">
+        UPDATED_TIME,
+      </if>
+      <if test="code != null">
+        CODE,
+      </if>
+      <if test="displayName != null">
+        DISPLAY_NAME,
+      </if>
+      <if test="username != null">
+        USERNAME,
+      </if>
+      <if test="password != null">
+        PASSWORD,
+      </if>
+      <if test="lockFlag != null">
+        LOCK_FLAG,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pkAdmin != null">
+        #{pkAdmin,jdbcType=VARCHAR},
+      </if>
+      <if test="revision != null">
+        #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        #{updatedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null">
+        #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="code != null">
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="displayName != null">
+        #{displayName,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="lockFlag != null">
+        #{lockFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.mrchen.basic.entity.Admin">
+    update admin
+    <set>
+      <if test="revision != null">
+        REVISION = #{revision,jdbcType=INTEGER},
+      </if>
+      <if test="createdBy != null">
+        CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedBy != null">
+        UPDATED_BY = #{updatedBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updatedTime != null">
+        UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="code != null">
+        CODE = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="displayName != null">
+        DISPLAY_NAME = #{displayName,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null">
+        USERNAME = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        PASSWORD = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="lockFlag != null">
+        LOCK_FLAG = #{lockFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where PK_ADMIN = #{pkAdmin,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.mrchen.basic.entity.Admin">
+    update admin
+    set REVISION = #{revision,jdbcType=INTEGER},
+      CREATED_BY = #{createdBy,jdbcType=VARCHAR},
+      CREATED_TIME = #{createdTime,jdbcType=TIMESTAMP},
+      UPDATED_BY = #{updatedBy,jdbcType=VARCHAR},
+      UPDATED_TIME = #{updatedTime,jdbcType=TIMESTAMP},
+      CODE = #{code,jdbcType=VARCHAR},
+      DISPLAY_NAME = #{displayName,jdbcType=VARCHAR},
+      USERNAME = #{username,jdbcType=VARCHAR},
+      PASSWORD = #{password,jdbcType=VARCHAR},
+      LOCK_FLAG = #{lockFlag,jdbcType=CHAR}
+    where PK_ADMIN = #{pkAdmin,jdbcType=VARCHAR}
+  </update>
+</mapper>
