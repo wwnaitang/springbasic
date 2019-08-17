@@ -1,4 +1,4 @@
-package cn.mrchen.basic.entity;
+package cn.mrchen.demo.entity;
 
 import java.util.Date;
 

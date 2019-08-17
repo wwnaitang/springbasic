@@ -1,4 +1,4 @@
-package cn.mrchen.basic;
+package cn.mrchen;
 
 import org.junit.Test;
 

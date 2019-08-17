@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.mrchen.basic.mapper.AdminMapper">
-  <resultMap id="BaseResultMap" type="cn.mrchen.basic.entity.Admin">
+<mapper namespace="cn.mrchen.demo.mapper.AdminMapper">
+  <resultMap id="BaseResultMap" type="cn.mrchen.demo.entity.Admin">
     <constructor>
       <idArg column="PK_ADMIN" javaType="java.lang.String" jdbcType="VARCHAR" />
       <arg column="REVISION" javaType="java.lang.Integer" jdbcType="INTEGER" />
@@ -30,7 +30,7 @@
     delete from admin
     where PK_ADMIN = #{pkAdmin,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="cn.mrchen.basic.entity.Admin">
+  <insert id="insert" parameterType="cn.mrchen.demo.entity.Admin">
     insert into admin (PK_ADMIN, REVISION, CREATED_BY, 
       CREATED_TIME, UPDATED_BY, UPDATED_TIME, 
       CODE, DISPLAY_NAME, USERNAME, 
@@ -40,7 +40,7 @@
       #{code,jdbcType=VARCHAR}, #{displayName,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, 
       #{password,jdbcType=VARCHAR}, #{lockFlag,jdbcType=CHAR})
   </insert>
-  <insert id="insertSelective" parameterType="cn.mrchen.basic.entity.Admin">
+  <insert id="insertSelective" parameterType="cn.mrchen.demo.entity.Admin">
     insert into admin
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="pkAdmin != null">
@@ -113,7 +113,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="cn.mrchen.basic.entity.Admin">
+  <update id="updateByPrimaryKeySelective" parameterType="cn.mrchen.demo.entity.Admin">
     update admin
     <set>
       <if test="revision != null">
@@ -149,7 +149,7 @@
     </set>
     where PK_ADMIN = #{pkAdmin,jdbcType=VARCHAR}
   </update>
-  <update id="updateByPrimaryKey" parameterType="cn.mrchen.basic.entity.Admin">
+  <update id="updateByPrimaryKey" parameterType="cn.mrchen.demo.entity.Admin">
     update admin
     set REVISION = #{revision,jdbcType=INTEGER},
       CREATED_BY = #{createdBy,jdbcType=VARCHAR},

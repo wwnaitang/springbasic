@@ -1,4 +1,4 @@
-package cn.mrchen.basic.util;
+package cn.mrchen.pub.util;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ public class JJWTTokenCreatorTest {
 
     static {
         try {
-            clazz = Class.forName("cn.mrchen.basic.util.JJWTTokenCreator");
+            clazz = Class.forName("cn.mrchen.pub.util.JJWTTokenCreator");
             jjwtTokenCreator = (JJWTTokenCreator) clazz.newInstance();
         } catch (Exception e) {
             e.printStackTrace();

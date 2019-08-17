@@ -11,7 +11,7 @@
     </appenders>
     <loggers>
         <!-- logger的name填写SpringBootApp包名 -->
-        <logger name="cn.mrchen.basic" level="debug" />
+        <logger name="cn.mrchen" level="debug" />
         <root level="info">
             <appenderref ref="CONSOLE" />
         </root>
